@@ -1,8 +1,5 @@
 import { drizzle } from "drizzle-orm/libsql";
 import * as schema from "./schema";
-import { config } from "dotenv";
-
-config();
 
 export const db = drizzle({
   connection: {
