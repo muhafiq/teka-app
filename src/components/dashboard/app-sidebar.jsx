@@ -16,6 +16,7 @@ import {
   FileQuestion,
   PowerIcon,
   CircleDollarSign,
+  PersonStandingIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
@@ -63,8 +64,13 @@ export default async function AppSidebar() {
       },
       {
         title: "Pembayaran",
-        url: "/dashboard/events",
+        url: "/dashboard/payments",
         icon: CircleDollarSign,
+      },
+      {
+        title: "Daftarkan Anak",
+        url: "/dashboard/register-students",
+        icon: PersonStandingIcon,
       },
       {
         title: "Panduan Aplikasi",

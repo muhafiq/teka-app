@@ -27,7 +27,6 @@ export const teachers = sqliteTable("teachers", {
   id: text("id")
     .primaryKey()
     .$default(() => crypto.randomUUID()),
-  name: text("name").notNull(),
   nip: text("nip").notNull().unique(),
   gender: text("gender").notNull(),
   religion: text("religion").notNull(),
