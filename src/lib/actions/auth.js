@@ -101,7 +101,10 @@ export async function registerStudents(prevState, formData) {
       }&total=${total}`
     );
   } else {
-    return redirect("/login?success=1");
+    const callbackUrl = data.callbackUrl.startsWith("/dashboard")
+      ? data.callbackUrl
+      : "/login";
+    return redirect(`${callbackUrl}?success=1`);
   }
 }
 

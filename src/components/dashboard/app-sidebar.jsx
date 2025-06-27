@@ -21,6 +21,9 @@ import {
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { role } from "@/helpers/schema";
+import { db } from "@/lib/db";
+import { parents } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export default async function AppSidebar() {
   const { user } = await auth();
@@ -41,7 +44,7 @@ export default async function AppSidebar() {
       },
       {
         title: "Daftar Kelas",
-        url: "/dashboard/class-and-students",
+        url: "/dashboard/classrooms",
         icon: Inbox,
       },
       {
@@ -56,6 +59,10 @@ export default async function AppSidebar() {
       },
     ];
   } else if (user.role === role.parent) {
+    const [parent] = await db
+      .select({ id: parents.id })
+      .from(parents)
+      .where(eq(parents.userId, user.id));
     items = [
       {
         title: "Dashboard",
@@ -69,7 +76,7 @@ export default async function AppSidebar() {
       },
       {
         title: "Daftarkan Anak",
-        url: "/dashboard/register-students",
+        url: `/dashboard/register-students?parentId=${parent.id}`,
         icon: PersonStandingIcon,
       },
       {

@@ -26,14 +26,6 @@ export default function LoginForm({ className, ...props }) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
-          <CardTitle className="text-center text-xl">
-            Login ke akun anda sebagai Orang tua atau Guru.
-          </CardTitle>
-          <CardDescription>
-            Halaman ini digunakan untuk login Orang tua siswa, Guru dan Admin
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           <form action={formAction}>
             <input type="hidden" name="redirectTo" value={callbackUrl} />

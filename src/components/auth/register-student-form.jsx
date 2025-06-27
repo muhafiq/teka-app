@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import { useActionState } from "react";
 import { registerStudents } from "@/lib/actions/auth";
 import { Input } from "@/components/ui/input";
@@ -17,8 +17,8 @@ import {
 
 export default function RegisterStudentForm() {
   const searchParams = useSearchParams();
-  const parentId = searchParams.get("parentId") || "1";
-  const classroomId = searchParams.get("classroomId") || "1"; // default
+  const callbackUrl = usePathname();
+  const parentId = searchParams.get("parentId");
   const step = searchParams.get("step") || "1";
   const total = searchParams.get("total") || "1";
 
@@ -29,8 +29,12 @@ export default function RegisterStudentForm() {
 
   return (
     <form action={formAction} className="space-y-5">
+      <h1 className="text-md font-bold text-center pb-4">
+        Pendaftaran siswa ke-{step} dari total {total} siswa yang ingin
+        didaftarkan.
+      </h1>
+      <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <input type="hidden" name="parentId" value={parentId} />
-      <input type="hidden" name="classroomId" value={classroomId} />
       <input type="hidden" name="step" value={step} />
       <input type="hidden" name="total" value={total} />
 
