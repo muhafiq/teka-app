@@ -128,8 +128,28 @@ export const finances = sqliteTable("finances", {
   category: text("category").notNull(), // spp, gaji, rekreasi
   description: text("description"),
   amount: integer("amount").notNull(),
-  date: text("date").notNull(),
+  date: integer("date", { mode: "timestamp" })
+    .notNull()
+    .$default(() => new Date()),
   studentId: text("student_id").references(() => students.id),
+  invoiceId: text("invoiceId").references(() => invoices.id),
+  ...timestamps,
+});
+
+export const invoices = sqliteTable("invoices", {
+  id: text("id")
+    .primaryKey()
+    .$default(() => crypto.randomUUID()),
+  studentId: text("student_id")
+    .references(() => students.id)
+    .notNull(),
+  amount: integer("amount").notNull(),
+  due_date: integer("due_date", { mode: "timestamp" }).$default(
+    () => new Date()
+  ),
+  status: text("status").notNull(), // enum: unpaid | paid
+  paid_at: integer("paid_at", { mode: "timestamp" }).$default(() => new Date()),
+  category: text("category").notNull(), // enum: spp
   ...timestamps,
 });
 
@@ -178,7 +198,7 @@ export const studentsRelations = relations(students, ({ one, many }) => ({
     fields: [students.classroomId],
     references: [classrooms.id],
   }),
-  finances: many(finances),
+  invoices: many(invoices),
 }));
 
 export const classroomsRelations = relations(classrooms, ({ one, many }) => ({
@@ -204,9 +224,9 @@ export const eventImagesRelations = relations(eventImages, ({ one }) => ({
   }),
 }));
 
-export const financesRelations = relations(finances, ({ one }) => ({
+export const invoicesRelations = relations(invoices, ({ one }) => ({
   student: one(students, {
-    fields: [finances.studentId],
+    fields: [invoices.studentId],
     references: [students.id],
   }),
 }));

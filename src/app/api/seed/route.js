@@ -1,7 +1,7 @@
-import { seedClassroom } from "@/lib/db/seed";
+import { seedInvoices, seedStudents } from "@/lib/db/seed";
 export async function GET() {
   try {
-    await seedClassroom();
+    await seedInvoices();
     return Response.json({ message: "Success seeding!" });
   } catch (error) {
     console.error(error);
