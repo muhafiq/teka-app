@@ -1,5 +1,11 @@
 import { db } from "@/lib/db";
-import { classrooms, students, teachers, users } from "@/lib/db/schema";
+import {
+  classrooms,
+  parents,
+  students,
+  teachers,
+  users,
+} from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import {
@@ -41,16 +47,21 @@ export default async function StudentsClass({ params }) {
       id: students.id,
       name: students.name,
       gender: students.gender,
+      parentName: users.name,
+      birthDate: students.birthDate,
+      birthPlace: students.birthPlace,
     })
     .from(students)
-    .where(eq(students.classroomId, classroomId));
+    .where(eq(students.classroomId, classroomId))
+    .leftJoin(parents, eq(students.parentId, parents.id))
+    .leftJoin(users, eq(parents.userId, users.id));
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 space-y-6">
+    <div className="max-w-7xl mx-auto p-4 space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">
-            Kelas {classroom.type} - {classroom.location}
+            Kelas - {classroom.location}
           </CardTitle>
           <CardDescription>
             Wali Kelas: {classroom.waliKelas ?? "-"}
@@ -63,6 +74,8 @@ export default async function StudentsClass({ params }) {
                 <TableHead className="w-12">No</TableHead>
                 <TableHead>Nama</TableHead>
                 <TableHead>Jenis Kelamin</TableHead>
+                <TableHead>Tgl Lahir</TableHead>
+                <TableHead>Nama Ortu</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -73,6 +86,8 @@ export default async function StudentsClass({ params }) {
                   <TableCell className="capitalize">
                     {student.gender === "L" ? "Laki-laki" : "Perempuan"}
                   </TableCell>
+                  <TableCell>{student.birthDate}</TableCell>
+                  <TableCell>{student.parentName}</TableCell>
                 </TableRow>
               ))}
               {classroomStudents.length === 0 && (
