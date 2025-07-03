@@ -12,11 +12,13 @@ import {
 import {
   Calendar,
   Home,
-  Inbox,
   FileQuestion,
   PowerIcon,
   CircleDollarSign,
   PersonStandingIcon,
+  ClipboardPen,
+  Users,
+  Landmark,
 } from "lucide-react";
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
@@ -24,6 +26,7 @@ import { role } from "@/helpers/schema";
 import { db } from "@/lib/db";
 import { parents } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import { GraduationCap } from "lucide-react";
 
 export default async function AppSidebar() {
   const { user } = await auth();
@@ -45,7 +48,12 @@ export default async function AppSidebar() {
       {
         title: "Daftar Kelas",
         url: "/dashboard/classrooms",
-        icon: Inbox,
+        icon: Landmark,
+      },
+      {
+        title: "Daftar Guru",
+        url: "/dashboard/teachers",
+        icon: Users,
       },
       {
         title: "Kegiatan",
@@ -93,6 +101,16 @@ export default async function AppSidebar() {
         icon: Home,
       },
       {
+        title: "Presensi Siswa",
+        url: "/dashboard/presensi/students",
+        icon: ClipboardPen,
+      },
+      {
+        title: "Kegiatan Kelas",
+        url: "/dashboard/events/class",
+        icon: Calendar,
+      },
+      {
         title: "Panduan Aplikasi",
         url: "/dashboard/tutorial",
         icon: FileQuestion,
@@ -104,8 +122,10 @@ export default async function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center gap-2 p-4">
-          {/* <Icons.logo className="w-6 h-6 text-primary" /> */}
-          <span className="text-lg font-bold">TekaApp</span>
+          <Link href="/" className="flex items-center gap-2 select-none">
+            <GraduationCap className="w-6 h-6 text-primary" />
+            <span className="font-bold text-lg">TK Tadika Mesra</span>
+          </Link>
         </div>
       </SidebarHeader>
       <SidebarContent>
