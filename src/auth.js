@@ -20,7 +20,7 @@ async function getUser(phoneNumber) {
   }
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const authOptions = {
   ...authConfig,
   providers: [
     Credentials({
@@ -39,7 +39,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (!user) return null;
 
           const passwordMatch = await bcrypt.compare(password, user.password);
-
           if (passwordMatch) return user;
         }
 
@@ -47,4 +46,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-});
+};
+
+export const { handlers, auth, signIn, signOut } = NextAuth(authOptions);

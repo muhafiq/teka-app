@@ -47,8 +47,10 @@ export default function FinancesTable({ data }) {
                     <TableCell>{formatRupiah(item.amount)}</TableCell>
                     <TableCell className="text-center">
                       <Badge
-                        variant={
-                          item.type === "income" ? "success" : "destructive"
+                        className={
+                          item.type === "income"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
                         }
                       >
                         {item.type === "income" ? "Pemasukan" : "Pengeluaran"}
