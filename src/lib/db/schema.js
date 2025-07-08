@@ -109,16 +109,40 @@ export const events = sqliteTable("events", {
   ...timestamps,
 });
 
+export const subEvents = sqliteTable("sub_events", {
+  id: text("id")
+    .primaryKey()
+    .$default(() => crypto.randomUUID()),
+  title: text("title")
+    .notNull(),
+  description: text("description"),
+  eventId: text("event_id")
+    .notNull()
+    .references(() => events.id, { onDelete: "cascade" }),
+  ...timestamps,
+});
+
 export const eventImages = sqliteTable("event_images", {
   id: text("id")
     .primaryKey()
     .$default(() => crypto.randomUUID()),
+
   eventId: text("event_id")
     .notNull()
     .references(() => events.id),
+
+  subEventId: text("sub_event_id") // ✅ cukup ini saja untuk nullable
+    .references(() => subEvents.id),
+
   imageUrl: text("image_url").notNull(),
-  ...timestamps,
+
+  createdAt: text("created_at")
+    .default(sql`(CURRENT_TIMESTAMP)`)
+    .notNull(),
+
+  updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(() => new Date()),
 });
+
 
 export const finances = sqliteTable("finances", {
   id: text("id")
@@ -217,10 +241,22 @@ export const eventsRelations = relations(events, ({ one, many }) => ({
   images: many(eventImages),
 }));
 
+export const subEventsRelations = relations(subEvents, ({ one, many }) => ({
+  event: one(events, {
+    fields: [subEvents.eventId],
+    references: [events.id],
+  }),
+  images: many(eventImages),
+}));
+
 export const eventImagesRelations = relations(eventImages, ({ one }) => ({
   event: one(events, {
     fields: [eventImages.eventId],
     references: [events.id],
+  }),
+  subEvent: one(subEvents, {
+    fields: [eventImages.subEventId],
+    references: [subEvents.id],
   }),
 }));
 
