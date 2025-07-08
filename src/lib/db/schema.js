@@ -70,6 +70,7 @@ export const students = sqliteTable("students", {
   birthDate: text("birth_date").notNull(),
   birthPlace: text("birth_place").notNull(),
   nation: text("nation").notNull(),
+  uniformSize: text("uniform_size"),
   parentId: text("parent_id")
     .notNull()
     .references(() => parents.id),
@@ -113,8 +114,7 @@ export const subEvents = sqliteTable("sub_events", {
   id: text("id")
     .primaryKey()
     .$default(() => crypto.randomUUID()),
-  title: text("title")
-    .notNull(),
+  title: text("title").notNull(),
   description: text("description"),
   eventId: text("event_id")
     .notNull()
@@ -140,9 +140,10 @@ export const eventImages = sqliteTable("event_images", {
     .default(sql`(CURRENT_TIMESTAMP)`)
     .notNull(),
 
-  updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(() => new Date()),
+  updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(
+    () => new Date()
+  ),
 });
-
 
 export const finances = sqliteTable("finances", {
   id: text("id")
@@ -174,6 +175,17 @@ export const invoices = sqliteTable("invoices", {
   status: text("status").notNull(), // enum: unpaid | paid
   paid_at: integer("paid_at", { mode: "timestamp" }).$default(() => new Date()),
   category: text("category").notNull(), // enum: spp
+  ...timestamps,
+});
+
+export const attendance = sqliteTable("attendances", {
+  id: text("id")
+    .primaryKey()
+    .$default(() => crypto.randomUUID()),
+  studentId: text("student_id")
+    .notNull()
+    .references(() => students.id),
+  date: integer("date", { mode: "timestamp" }).notNull(),
   ...timestamps,
 });
 
@@ -263,6 +275,13 @@ export const eventImagesRelations = relations(eventImages, ({ one }) => ({
 export const invoicesRelations = relations(invoices, ({ one }) => ({
   student: one(students, {
     fields: [invoices.studentId],
+    references: [students.id],
+  }),
+}));
+
+export const attendanceRelations = relations(attendance, ({ one }) => ({
+  student: one(students, {
+    fields: [attendance.studentId],
     references: [students.id],
   }),
 }));

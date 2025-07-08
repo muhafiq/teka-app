@@ -2,7 +2,13 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { students, parents } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,6 +18,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { notFound } from "next/navigation";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default async function ParentDashboard() {
   const { user } = await auth();
@@ -51,7 +59,11 @@ export default async function ParentDashboard() {
     <div className="max-w-7xl mx-auto p-4 space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Informasi Anak</CardTitle>
+          <CardTitle className="text-xl">Informasi Anak</CardTitle>
+          <CardDescription>
+            Berikut adalah daftar anak anda, klik tombol detail untuk informasi
+            lebih lanjut.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {children.length === 0 ? (
@@ -65,16 +77,26 @@ export default async function ParentDashboard() {
                   <TableHead>Nama</TableHead>
                   <TableHead>Jenis Kelamin</TableHead>
                   <TableHead>Tempat, Tanggal Lahir</TableHead>
+                  <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {children.map((child) => (
                   <TableRow key={child.id}>
                     <TableCell>{child.name}</TableCell>
-                    <TableCell className="capitalize">{child.gender}</TableCell>
+                    <TableCell className="capitalize">
+                      {child.gender === "L" ? "Laki-laki" : "Perempuan"}
+                    </TableCell>
                     <TableCell>
                       {child.birthPlace},{" "}
                       {new Date(child.birthDate).toLocaleDateString("id-ID")}
+                    </TableCell>
+                    <TableCell>
+                      <Button>
+                        <Link href={`/dashboard/childrens/${child.id}`}>
+                          Detail
+                        </Link>
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

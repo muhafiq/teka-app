@@ -29,6 +29,11 @@ export const financeTypes = {
   expense: "expense",
 };
 
+export const invoiceStatus = {
+  paid: "paid",
+  unpaid: "unpaid",
+};
+
 export function dateToString(date) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Januari = 0

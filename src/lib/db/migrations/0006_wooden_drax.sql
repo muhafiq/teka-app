@@ -1,0 +1,1 @@
+ALTER TABLE `students` ADD `uniform_size` text;
