@@ -34,3 +34,33 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+# Feature based on Sprint
+
+#### Sprint 1 (35 points):
+
+1. Pendaftaran siswa baru (13 points) ✅
+
+2. Admin memantau pemasukan/pengeluaran (5 points)✅
+
+3. Login (3 points)✅
+
+4. Admin kelola jadwal kegiatan TK (8 points)✅
+
+5. Orang tua lihat acara TK (3 points)
+
+#### Sprint 2 (35 points):
+
+1. Admin kelola pembayaran/tagihan TK (13 points)✅
+
+2. Orang tua bayar spp lewat aplikasi (21 points)✅
+
+#### Sprint 3 (35 points):
+
+1. Admin kelola data anak, guru, staf (21 points) (kelas✅, guru✅)
+
+2. Orang tua melihat perkembangan anak (8 points)
+
+3. Guru absensi siswa (3 points)
+
+4. guru upload foto(3 point)
