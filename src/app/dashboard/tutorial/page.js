@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AppTutorialPage() {
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
+    <div className="max-w-7xl mx-auto p-4">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">

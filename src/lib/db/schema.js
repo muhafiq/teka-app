@@ -135,12 +135,20 @@ export const eventImages = sqliteTable("event_images", {
     .references(() => subEvents.id),
 
   imageUrl: text("image_url").notNull(),
+  // subEventId: text("sub_event_id").references(() => subEvents.id),
+  ...timestamps,
+});
 
-  createdAt: text("created_at")
-    .default(sql`(CURRENT_TIMESTAMP)`)
-    .notNull(),
-
-  updateAt: integer("updated_at", { mode: "timestamp" }).$onUpdate(() => new Date()),
+export const subEvents = sqliteTable("sub_events", {
+  id: text("id")
+    .primaryKey()
+    .$default(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  description: text("description"),
+  eventId: text("event_id")
+    .notNull()
+    .references(() => events.id),
+  ...timestamps,
 });
 
 
@@ -160,6 +168,7 @@ export const finances = sqliteTable("finances", {
   ...timestamps,
 });
 
+// TODO: ganti jadi bills
 export const invoices = sqliteTable("invoices", {
   id: text("id")
     .primaryKey()
@@ -239,14 +248,7 @@ export const eventsRelations = relations(events, ({ one, many }) => ({
     references: [users.id],
   }),
   images: many(eventImages),
-}));
-
-export const subEventsRelations = relations(subEvents, ({ one, many }) => ({
-  event: one(events, {
-    fields: [subEvents.eventId],
-    references: [events.id],
-  }),
-  images: many(eventImages),
+  subEvents: many(subEvents),
 }));
 
 export const eventImagesRelations = relations(eventImages, ({ one }) => ({
@@ -254,10 +256,10 @@ export const eventImagesRelations = relations(eventImages, ({ one }) => ({
     fields: [eventImages.eventId],
     references: [events.id],
   }),
-  subEvent: one(subEvents, {
-    fields: [eventImages.subEventId],
-    references: [subEvents.id],
-  }),
+}));
+
+export const subEventRelations = relations(subEvents, ({ many }) => ({
+  images: many(eventImages),
 }));
 
 export const invoicesRelations = relations(invoices, ({ one }) => ({

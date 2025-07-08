@@ -163,7 +163,7 @@ export async function deleteClassroom(prevState, formData) {
     await db.delete(classrooms).where(eq(classrooms.id, classroomId));
 
     return {
-      success: false,
+      success: true,
       message: "Berhasil menghapus kelas.",
     };
   } catch (error) {
