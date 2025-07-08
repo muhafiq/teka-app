@@ -31,9 +31,15 @@ export default function CreateEventForm({userId}) {
     setSubEvents(updated);
   };
 
-  const handleFileChange = (index, files) => {
+  const handleFileChange = (index, newFiles) => {
     const updated = [...subEvents];
-    updated[index].images = files;
+
+    const existingFiles = updated[index].images || [];
+
+    // Gabungkan FileList baru + yang lama
+    const mergedFiles = [...existingFiles, ...Array.from(newFiles)];
+
+    updated[index].images = mergedFiles;
     setSubEvents(updated);
   };
 
