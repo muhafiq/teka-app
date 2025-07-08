@@ -13,13 +13,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PayNowButton } from "@/components/finances/pay-midtrans";
+import { notFound } from "next/navigation";
+import { Card } from "@/components/ui/card";
 
 export default async function Payments() {
   const { user } = await auth();
 
-  if (!user) {
-    return <p>Unauthorized</p>;
-  }
+  if (!user) return notFound();
 
   // Get parent based on current user
   const parent = await db.query.parents.findFirst({
@@ -50,7 +50,7 @@ export default async function Payments() {
   const paid = allInvoices.filter((inv) => inv.status === "paid");
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+    <Card className="max-w-7xl mx-auto px-4 py-6 space-y-6">
       <h1 className="text-2xl font-bold">Tagihan Anak</h1>
 
       <Tabs defaultValue="unpaid">
@@ -72,7 +72,7 @@ export default async function Payments() {
           <InvoiceTable data={paid} siswa={student} />
         </TabsContent>
       </Tabs>
-    </div>
+    </Card>
   );
 }
 
