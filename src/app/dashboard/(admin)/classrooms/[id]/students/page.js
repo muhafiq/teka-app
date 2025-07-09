@@ -23,6 +23,8 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function StudentsClass({ params }) {
   const { id: classroomId } = await params;
@@ -78,6 +80,7 @@ export default async function StudentsClass({ params }) {
                 <TableHead>Tgl Lahir</TableHead>
                 <TableHead>Nama Ortu</TableHead>
                 <TableHead>Ukuran Seragam</TableHead>
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -91,6 +94,13 @@ export default async function StudentsClass({ params }) {
                   <TableCell>{student.birthDate}</TableCell>
                   <TableCell>{student.parentName}</TableCell>
                   <TableCell>{student.uniformSize}</TableCell>
+                  <TableCell>
+                    <Link href={`/dashboard/students/${student.id}/edit`}>
+                      <Button className="mr-1" size="sm">
+                        Edit
+                      </Button>
+                    </Link>
+                  </TableCell>
                 </TableRow>
               ))}
               {classroomStudents.length === 0 && (

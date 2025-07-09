@@ -59,15 +59,27 @@ export default async function StudentDetails() {
       name: events.eventName,
       description: events.description,
       date: events.date,
-      images: eventImages.imageUrl,
     })
     .from(students)
     .innerJoin(classrooms, eq(students.classroomId, classrooms.id))
     .innerJoin(teachers, eq(classrooms.waliKelas, teachers.id))
     .innerJoin(users, eq(teachers.userId, users.id))
     .innerJoin(events, eq(events.createdBy, users.id))
-    .leftJoin(eventImages, eq(eventImages.eventId, events.id))
     .where(eq(students.id, student.id));
+
+  const eventsWithImage = await Promise.all(
+    allEvents.map(async (event) => {
+      const [image] = await db
+        .select({ imageUrl: eventImages.imageUrl })
+        .from(eventImages)
+        .where(eq(eventImages.eventId, event.id));
+
+      return {
+        ...event,
+        images: image?.imageUrl ?? null,
+      };
+    })
+  );
 
   const allInvoices = await db
     .select()
@@ -126,31 +138,39 @@ export default async function StudentDetails() {
       <Card className="shadow-md p-8">
         <CardTitle className="text-xl">Riwayat Kegiatan</CardTitle>
         <CardContent>
-          {allEvents.length == 0 ? (
+          {eventsWithImage.length === 0 ? (
             <div>Siswa belum memiliki kegiatan</div>
           ) : (
-            allEvents.map((evt) => (
-              <Card key={evt.id} className="overflow-hidden">
-                {evt.images && (
-                  <Image
-                    src={evt.images}
-                    alt={evt.eventName}
-                    width={300}
-                    height={300}
-                    className="h-48 w-full object-cover"
-                  />
-                )}
-                <CardHeader>
-                  <CardTitle>{evt.eventName}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    {evt.type} • {evt.date}
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <p>{evt.description || "Tidak ada deskripsi."}</p>
-                </CardContent>
-              </Card>
-            ))
+            <div className="flex overflow-x-auto space-x-4 py-2">
+              {eventsWithImage.map((evt) => (
+                <Card
+                  key={evt.id}
+                  className="min-w-[300px] max-w-xs flex-shrink-0 overflow-hidden"
+                >
+                  {evt.images && (
+                    <Image
+                      src={evt.images}
+                      alt={evt.name}
+                      width={300}
+                      height={300}
+                      className="h-48 w-full object-cover"
+                    />
+                  )}
+                  <CardHeader>
+                    <CardTitle>{evt.name}</CardTitle>
+                    <p className="text-sm text-muted-foreground">{evt.date}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <p>{evt.description || "Tidak ada deskripsi."}</p>
+                  </CardContent>
+                  <CardContent>
+                    <Link href={`/events/${evt.id}`} className="cursor-pointer">
+                      <Button size="sm">Detail</Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           )}
         </CardContent>
       </Card>
