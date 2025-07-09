@@ -1,6 +1,6 @@
 import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, MapPin } from "lucide-react";
+import { User, MapPin, Calendar, PersonStanding } from "lucide-react";
 import { db } from "@/lib/db";
 import {
   classrooms,
@@ -14,7 +14,7 @@ import {
 } from "@/lib/db/schema";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import {
   Table,
   TableBody,
@@ -85,8 +85,10 @@ export default async function StudentDetails() {
     .select()
     .from(invoices)
     .where(
-      eq(invoices.studentId, student.id),
-      eq(invoices.status, invoiceStatus.unpaid)
+      and(
+        eq(invoices.studentId, student.id),
+        eq(invoices.status, invoiceStatus.unpaid)
+      )
     );
 
   console.log(allEvents);
@@ -117,14 +119,14 @@ export default async function StudentDetails() {
                 <span>Alamat: {student.address}</span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
+                <PersonStanding className="w-4 h-4" />
                 <span>
                   Jenis Kelamin:{" "}
                   {student.gender === "L" ? "Laki-laki" : "Perempuan"}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
+                <Calendar className="w-4 h-4" />
                 <span>
                   TTL: {`${student.birthPlace}, ${student.birthDate}`}
                 </span>
