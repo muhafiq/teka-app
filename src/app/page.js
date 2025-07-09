@@ -31,7 +31,7 @@ export default async function HomePage() {
           {/* Hero Section */}
           <div className="md:col-span-2 space-y-6">
             <h1 className="text-4xl font-bold text-primary">
-              Selamat Datang di TK Tadika Mesra hdbiewbdibdedibe🌼
+              Selamat Datang di TK Tadika Mesra 🌼
             </h1>
             <p className="text-muted-foreground text-lg">
               Tempat terbaik untuk anak-anak belajar dan bermain dengan penuh
