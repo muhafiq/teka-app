@@ -10,8 +10,17 @@ import {
 } from "@/components/ui/card";
 import Header from "@/components/public/header";
 import Footer from "@/components/public/footer";
+import { db } from "@/lib/db";
+import { events } from "@/lib/db/schema";
+import { gt } from "drizzle-orm";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const upcomingEvents = await db
+    .select()
+    .from(events)
+    .where(gt(events.date, new Date().toISOString()))
+    .limit(5);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -54,19 +63,23 @@ export default function HomePage() {
                 </div>
                 <CalendarDays className="text-muted-foreground w-6 h-6" />
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4 text-sm">
-                  <div>
-                    <p className="font-medium">
-                      Kunjungan Edukasi ke Kebun Binatang
-                    </p>
-                    <p className="text-muted-foreground">📅 10 Juli 2025</p>
-                  </div>
-                  <div className="pt-3 border-t">
-                    <p className="font-medium">Pentas Seni Akhir Semester</p>
-                    <p className="text-muted-foreground">📅 25 Juli 2025</p>
-                  </div>
-                </div>
+              <CardContent className="flex flex-col gap-2">
+                {upcomingEvents.map((e) => (
+                  <Card
+                    key={e.id}
+                    className="space-y-4 text-sm p-4 flex-row items-center justify-between"
+                  >
+                    <div>
+                      <p className="font-semibold mb-2">{e.eventName}</p>
+                      <p className="text-muted-foreground">📅 {e.date}</p>
+                    </div>
+                    <Link href={`/events/${e.id}`} className="cursor-pointer">
+                      <Button variant="secondary" size="sm">
+                        Detail
+                      </Button>
+                    </Link>
+                  </Card>
+                ))}
               </CardContent>
             </Card>
           </section>

@@ -32,8 +32,10 @@ export default async function EventDetailPage({ params }) {
       <Link href="/dashboard/events" className="text-sm text-blue-600">
         ← Kembali ke daftar kegiatan
       </Link>
-      <br></br><br></br>
-      <h1 className="text-3xl font-bold">{event.eventName}</h1><br></br>
+      <br></br>
+      <br></br>
+      <h1 className="text-3xl font-bold">{event.eventName}</h1>
+      <br></br>
 
       {mainImage?.imageUrl && (
         <Image
@@ -77,7 +79,7 @@ export default async function EventDetailPage({ params }) {
                           className="border-2 rounded-md overflow-hidden w-64"
                           style={{ borderColor: "var(--primary)" }}
                         >
-                          <img
+                          <Image
                             src={img.imageUrl}
                             alt="Sub event"
                             className="w-full h-full object-cover"

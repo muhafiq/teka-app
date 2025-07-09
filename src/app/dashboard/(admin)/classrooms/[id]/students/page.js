@@ -50,6 +50,7 @@ export default async function StudentsClass({ params }) {
       parentName: users.name,
       birthDate: students.birthDate,
       birthPlace: students.birthPlace,
+      uniformSize: students.uniformSize,
     })
     .from(students)
     .where(eq(students.classroomId, classroomId))
@@ -76,6 +77,7 @@ export default async function StudentsClass({ params }) {
                 <TableHead>Jenis Kelamin</TableHead>
                 <TableHead>Tgl Lahir</TableHead>
                 <TableHead>Nama Ortu</TableHead>
+                <TableHead>Ukuran Seragam</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -88,6 +90,7 @@ export default async function StudentsClass({ params }) {
                   </TableCell>
                   <TableCell>{student.birthDate}</TableCell>
                   <TableCell>{student.parentName}</TableCell>
+                  <TableCell>{student.uniformSize}</TableCell>
                 </TableRow>
               ))}
               {classroomStudents.length === 0 && (

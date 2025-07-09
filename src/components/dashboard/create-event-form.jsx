@@ -14,7 +14,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
-export default function CreateEventForm({userId}) {
+export default function CreateEventForm({ userId }) {
   const [error, formAction, isPending] = useActionState(createEvent, undefined);
   const [subEvents, setSubEvents] = useState([
     { title: "", description: "", images: [] },
@@ -48,7 +48,7 @@ export default function CreateEventForm({userId}) {
   };
 
   return (
-    <form action={formAction} className="max-w-2xl mx-auto py-8 px-4 space-y-6" encType="multipart/form-data">
+    <form action={formAction} className="max-w-2xl mx-auto py-8 px-4 space-y-6">
       <input type="hidden" name="userId" value={userId} />
       <div>
         <h2 className="text-2xl font-bold">Tambah Kegiatan</h2>
@@ -95,7 +95,10 @@ export default function CreateEventForm({userId}) {
       <div className="space-y-4">
         <h3 className="font-semibold text-lg">Sub-Kegiatan</h3>
         {subEvents.map((sub, i) => (
-          <div key={i} className="border p-4 rounded-md space-y-3 bg-muted/30 relative">
+          <div
+            key={i}
+            className="border p-4 rounded-md space-y-3 bg-muted/30 relative"
+          >
             {/* Tombol Hapus */}
             {subEvents.length > 1 && (
               <button
@@ -112,7 +115,9 @@ export default function CreateEventForm({userId}) {
               <Input
                 name={`sub_title_${i}`}
                 value={sub.title}
-                onChange={(e) => handleSubEventChange(i, "title", e.target.value)}
+                onChange={(e) =>
+                  handleSubEventChange(i, "title", e.target.value)
+                }
               />
             </div>
             <div>
@@ -121,7 +126,9 @@ export default function CreateEventForm({userId}) {
                 name={`sub_desc_${i}`}
                 rows={3}
                 value={sub.description}
-                onChange={(e) => handleSubEventChange(i, "description", e.target.value)}
+                onChange={(e) =>
+                  handleSubEventChange(i, "description", e.target.value)
+                }
               />
             </div>
             <div>

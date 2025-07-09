@@ -33,7 +33,7 @@ export default async function AdminDashboard() {
       .select()
       .from(classrooms)
       .then((res) => res.length),
-    db.select().from(events).orderBy(events.date).limit(3),
+    db.select().from(events).orderBy(desc(events.date)).limit(3),
     db.select().from(students).orderBy(desc(students.createdAt)).limit(5),
   ]);
 
@@ -123,7 +123,7 @@ export default async function AdminDashboard() {
                   <TableRow key={student.id}>
                     <TableCell>{student.name}</TableCell>
                     <TableCell className="capitalize">
-                      {student.gender}
+                      {student.gender == "L" ? "Laki-laki" : "Perempuan"}
                     </TableCell>
                   </TableRow>
                 ))}

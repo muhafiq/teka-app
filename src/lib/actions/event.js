@@ -5,24 +5,28 @@ import { events, subEvents, eventImages } from "@/lib/db/schema";
 import { v4 as uuidv4 } from "uuid";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { uploadToCloudinary } from "@/lib/cloudinary"; 
+import { deleteFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
+import { z } from "zod";
+import { eq } from "drizzle-orm";
 
 export async function createEvent(prevState, formData) {
-  console.log(Object.fromEntries(formData))
   try {
     const eventId = uuidv4();
     const createdBy = formData.get("userId"); // Ganti dengan ID user login sesungguhnya
 
     // 1. Upload thumbnail utama (opsional)
     // 2. Simpan event utama
-    const [newEvent] = await db.insert(events).values({
-      id: eventId,
-      eventName: formData.get("eventName")?.toString() || "",
-      description: formData.get("description")?.toString() || "",
-      date: formData.get("date")?.toString() || "",
-      type: formData.get("type")?.toString() || "",
-      createdBy,
-    }).returning({id: events.id})
+    const [newEvent] = await db
+      .insert(events)
+      .values({
+        id: eventId,
+        eventName: formData.get("eventName")?.toString() || "",
+        description: formData.get("description")?.toString() || "",
+        date: formData.get("date")?.toString() || "",
+        type: formData.get("type")?.toString() || "",
+        createdBy,
+      })
+      .returning({ id: events.id });
 
     const mainImage = formData.get("image");
     if (mainImage instanceof File && mainImage.size > 0) {
@@ -30,11 +34,10 @@ export async function createEvent(prevState, formData) {
 
       await db.insert(eventImages).values({
         imageUrl,
-        eventId
+        eventId,
         // ❌ subEventId tidak dikirim jika tidak ada
       });
     }
-
 
     // 3. Loop sub-event (jika ada)
     for (let i = 0; ; i++) {
@@ -44,16 +47,13 @@ export async function createEvent(prevState, formData) {
 
       const subId = uuidv4();
 
-      console.log("testtttttt");
       // Insert sub-event
       await db.insert(subEvents).values({
         id: subId,
         title: title?.toString() || "",
         description: desc?.toString() || "",
-        eventId
+        eventId,
       });
-
-      
 
       // Upload gambar sub-event (opsional)
       const images = formData.getAll(`sub_images_${i}`);
@@ -69,13 +69,49 @@ export async function createEvent(prevState, formData) {
         }
       }
     }
-
-    
   } catch (err) {
     console.error("CREATE EVENT ERROR:", err?.message || err);
-    return `Terjadi kesalahan saat menyimpan kegiatan: ${err?.message || err}`;
+    return `Terjadi kesalahan saat menyimpan kegiatan.`;
   }
   // 4. Selesai
-  revalidatePath("/dashboard/(admin)/events");
-  redirect("/dashboard/(admin)/events");
+  revalidatePath("/dashboard/events");
+  redirect("/dashboard/events");
+}
+
+export async function deleteEvent(prevState, formData) {
+  try {
+    const eventId = formData.get("eventId");
+
+    const validated = z.string().min(20).safeParse(eventId);
+
+    if (!validated.success) {
+      return {
+        success: false,
+        message: "ID Kegiatan tidak valid!",
+        errors: validated.error.flatten().fieldErrors,
+      };
+    }
+
+    await db.delete(subEvents).where(eq(subEvents.eventId, validated.data));
+    const urls = await db
+      .delete(eventImages)
+      .where(eq(eventImages.eventId, validated.data))
+      .returning({ url: eventImages.imageUrl });
+    await db.delete(events).where(eq(events.id, validated.data));
+
+    urls.map(async (url) => {
+      await deleteFromCloudinary(url.url);
+    });
+
+    return {
+      success: true,
+      message: "Berhasil menghapus kegiatan",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Terjadi kesalahan saat menghapus kegiatan.",
+    };
+  }
 }

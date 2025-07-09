@@ -95,6 +95,21 @@ export default function RegisterStudentForm() {
       </div>
 
       <div className="space-y-2">
+        <Label htmlFor="uniformSize">Ukuran Seragam</Label>
+        <Select name="uniformSize" required>
+          <SelectTrigger>
+            <SelectValue placeholder="Pilih" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="S">S</SelectItem>
+            <SelectItem value="M">M</SelectItem>
+            <SelectItem value="L">L</SelectItem>
+            <SelectItem value="XL">XL</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="space-y-2">
         <Label htmlFor="spesificDesease">Penyakit Khusus (jika ada)</Label>
         <Input id="spesificDesease" name="spesificDesease" />
       </div>
@@ -107,7 +122,7 @@ export default function RegisterStudentForm() {
           className="rounded border-gray-300"
         />
         <Label htmlFor="disabled" className="text-sm text-gray-700">
-          Anak berkebutuhan khusus
+          Anak Difabel
         </Label>
       </div>
 

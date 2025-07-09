@@ -59,8 +59,22 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 1. Admin kelola data anak, guru, staf (21 points) (kelas✅, guru✅)
 
-2. Orang tua melihat perkembangan anak (8 points)
+2. Orang tua melihat perkembangan anak (8 points)✅
 
-3. Guru absensi siswa (3 points)
+3. Guru absensi siswa (3 points)✅
 
-4. guru upload foto(3 point)
+4. guru upload foto(3 point)✅
+
+#### Masih kurang
+
+1. uniform size ✅
+
+2. hapus kegiatan ✅
+
+3. edit siswa, hapus siswa
+
+4. fix kegiatan terdekat, sort by desc ✅
+
+5. fix error dashboard parent ✅
+
+6. orang tua lihat acara tk ✅

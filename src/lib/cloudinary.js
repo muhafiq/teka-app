@@ -31,3 +31,21 @@ export async function uploadToCloudinary(file, folder = "student_documents") {
     bufferToStream(buffer).then((stream) => stream.pipe(uploadStream));
   });
 }
+
+export async function deleteFromCloudinary(fileUrl) {
+  try {
+    const parts = fileUrl.split("/");
+    const fileName = parts.at(-1); // 'abcxyz.jpg'
+    const folder = parts.at(-2); // 'student_documents'
+
+    const [publicId] = fileName.split(".");
+
+    const fullPublicId = `${folder}/${publicId}`;
+
+    const result = await cloudinary.uploader.destroy(fullPublicId);
+    return result;
+  } catch (error) {
+    console.error("Gagal menghapus file dari Cloudinary:", error);
+    return null;
+  }
+}

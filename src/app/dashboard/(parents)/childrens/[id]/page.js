@@ -1,6 +1,6 @@
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, MapPin, CreditCard } from "lucide-react";
+import { User, MapPin } from "lucide-react";
 import { db } from "@/lib/db";
 import {
   classrooms,
@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { invoiceStatus } from "@/helpers/schema";
+import Image from "next/image";
 
 export default async function StudentDetails() {
   const { user } = await auth();
@@ -75,6 +76,8 @@ export default async function StudentDetails() {
       eq(invoices.studentId, student.id),
       eq(invoices.status, invoiceStatus.unpaid)
     );
+
+  console.log(allEvents);
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -128,9 +131,9 @@ export default async function StudentDetails() {
           ) : (
             allEvents.map((evt) => (
               <Card key={evt.id} className="overflow-hidden">
-                {image?.imageUrl && (
+                {evt.images && (
                   <Image
-                    src={image.imageUrl}
+                    src={evt.images}
                     alt={evt.eventName}
                     width={300}
                     height={300}

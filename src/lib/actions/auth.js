@@ -5,8 +5,8 @@ import bcryptjs from "bcryptjs";
 import { AuthError } from "next-auth";
 import { signIn, signOut } from "@/auth";
 import { db } from "../db";
-import { parents, users, students, classrooms } from "../db/schema";
-import { role } from "@/helpers/schema";
+import { parents, users, students, classrooms, invoices } from "../db/schema";
+import { invoiceStatus, role } from "@/helpers/schema";
 import { redirect } from "next/navigation";
 import { uploadToCloudinary } from "../cloudinary";
 import { eq, count, desc } from "drizzle-orm";
@@ -78,20 +78,32 @@ export async function registerStudents(prevState, formData) {
 
   const classroomId = await findAvailableClassroom();
 
-  await db.insert(students).values({
-    name: data.name,
-    gender: data.gender,
-    religion: data.religion,
-    address: data.address,
-    kartuKeluarga: kk_url,
-    aktaKelahiran: akta_url,
-    spesificDesease: data.spesificDesease || "",
-    birthDate: data.birthDate,
-    birthPlace: data.birthPlace,
-    nation: data.nation,
-    parentId: data.parentId,
-    classroomId: classroomId,
-    disabled: data.disabled === "on" ? 1 : 0,
+  const [newStudent] = await db
+    .insert(students)
+    .values({
+      name: data.name,
+      gender: data.gender,
+      religion: data.religion,
+      address: data.address,
+      kartuKeluarga: kk_url,
+      aktaKelahiran: akta_url,
+      spesificDesease: data.spesificDesease || "",
+      birthDate: data.birthDate,
+      birthPlace: data.birthPlace,
+      nation: data.nation,
+      parentId: data.parentId,
+      classroomId: classroomId,
+      disabled: data.disabled === "on" ? 1 : 0,
+      uniformSize: data.uniformSize,
+    })
+    .returning({ id: students.id });
+
+  await db.insert(invoices).values({
+    category: "Biaya Registrasi",
+    amount: 5_000_000,
+    status: invoiceStatus.unpaid,
+    studentId: newStudent.id,
+    due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
   });
 
   if (step < total) {

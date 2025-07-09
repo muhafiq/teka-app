@@ -107,7 +107,7 @@ export default async function AppSidebar() {
       },
       {
         title: "Kegiatan Kelas",
-        url: "/dashboard/events/class",
+        url: "/dashboard/events",
         icon: Calendar,
       },
       {
