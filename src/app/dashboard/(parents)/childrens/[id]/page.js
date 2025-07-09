@@ -91,8 +91,6 @@ export default async function StudentDetails() {
       )
     );
 
-  console.log(allEvents);
-
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Student Info Card */}
